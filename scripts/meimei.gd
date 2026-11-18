@@ -27,9 +27,9 @@ func _on_body_shape_entered(body_rid: RID, body: Node, _body_shape_index: int, _
 	if body is TileMapLayer:
 		var tile_coords: Vector2i = body.get_coords_for_body_rid(body_rid)
 		var tile_data: TileData = body.get_cell_tile_data(tile_coords)
-		print(tile_data.get_collision_polygons_count(1))
+		# print(tile_data.get_collision_polygons_count(1))
 		if tile_data.get_collision_polygons_count(1) > 0:
-			get_tree().reload_current_scene()
+			get_tree().reload_current_scene.call_deferred()
 	
 func _on_body_entered(body: Node) -> void:
 	var velocitylength = clamp(linear_velocity.length()/100, 0, 10)

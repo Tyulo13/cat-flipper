@@ -26,7 +26,7 @@ func _on_body_entered(body: Node) -> void:
 			$Jumpscare.visible = true
 			$Jumpscare.global_position = Vector2(323.0,160.5)
 			$Jumpscare.global_rotation = 0
-			freeze = true
+			set_deferred("freeze", true)
 			$SFX.play()
 			await get_tree().create_timer(0.2).timeout
-			get_tree().reload_current_scene()
+			get_tree().reload_current_scene.call_deferred()

@@ -8,6 +8,8 @@ func _on_body_entered(body: Node) -> void:
 
 
 func _on_body_exited(body: Node) -> void:
+	if not is_inside_tree():
+		return
 	flipped = false
 	$ButtonUp.play()
 	$AnimatedSprite2D.play("default")

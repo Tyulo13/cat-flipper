@@ -10,11 +10,11 @@ var clickpositionoffset
 
 var clamp = 2000
 
-
+var alive = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	pass
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -59,12 +59,19 @@ func _on_mouse_exited() -> void:
 	mouseentered = false
 
 func _on_body_shape_entered(body_rid: RID, body: Node, _body_shape_index: int, _local_shape_index: int) -> void:
-	if body is TileMapLayer:
-		var tile_coords: Vector2i = body.get_coords_for_body_rid(body_rid)
-		var tile_data: TileData = body.get_cell_tile_data(tile_coords)
-		print(tile_data.get_collision_polygons_count(1))
-		if tile_data.get_collision_polygons_count(1) > 0:
-			get_tree().reload_current_scene()
+	if not alive:
+		return
+	if not (body is TileMapLayer):
+		return
+
+	var tile_coords: Vector2i = body.get_coords_for_body_rid(body_rid)
+	var tile_data: TileData = body.get_cell_tile_data(tile_coords)
+	# print(tile_data.get_collision_polygons_count(1))
+	if tile_data == null:
+		return
+	if tile_data.get_collision_polygons_count(1) > 0:
+		alive = false
+		get_tree().reload_current_scene.call_deferred()
 	
 	
 func _on_body_entered(body: Node) -> void:
@@ -73,5 +80,6 @@ func _on_body_entered(body: Node) -> void:
 	random_sfx.volume_db = -5 + velocitylength
 	random_sfx.pitch_scale = randf_range(0.8,1.2)
 	random_sfx.play()
-	if "hurts" in body:
-		get_tree().reload_current_scene()
+	if alive and "hurts" in body:
+		alive = false
+		get_tree().reload_current_scene.call_deferred()
